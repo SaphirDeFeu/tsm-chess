@@ -1,10 +1,16 @@
-pub mod piece;
+mod piece;
+mod position;
+mod d;
 
 fn main() {
     print!("TSMChess developed by TSMStudios | loaded modules (");
     piece::init();
+    position::init();
+    d::init();
     println!(")");
     let mut s_cmd: String = String::new();
+    let mut currentfen: String = String::from(position::STARTING_FEN);
+    let mut currentparsedfen: position::ParsedFEN = position::parse_fen(&currentfen);
     loop {
         std::io::stdin()
             .read_line(&mut s_cmd)
@@ -14,16 +20,32 @@ fn main() {
         let args: &[&str] = &commandparts[1..];
         match command {
             "exit" | "quit" => std::process::exit(0),
-            "test" => { // testing functionalities (only available during snapshots or development commits)
-                if args[0] == "newpiece" {
-                    let mut newpiece: piece::Piece = piece::Piece {
-                        info: 0b00001011,
-                        text: ' '
-                    };
-                    newpiece.setText();
-                    println!("{}", newpiece);
+            "position" => {
+                match args[0] {
+                    "startpos" => {
+                        currentfen = String::from(position::STARTING_FEN);
+                        currentparsedfen = position::parse_fen(&currentfen);
+                    }
+                    "fen" => {
+                        let str_slice: &[&str] = &args[1..7];
+                        let concatenated: String = str_slice.join(" ");
+                        currentfen = concatenated;
+                        currentparsedfen = position::parse_fen(&currentfen);
+                    }
+                    _ => println!("{}", command),
                 }
             }
+            "test" => { // testing functionalities (only available during snapshots or development commits)
+                //println!("No testing functionalities available for this snapshot");
+                if args[0] == "fen" {
+                    currentparsedfen = position::parse_fen(position::STARTING_FEN);
+                    println!("{:#?}", currentparsedfen);
+                } else if args[0] == "pos" {
+                    dbg!(position::convert_pos_to_string(0b00101011));
+                    println!("{:b}", position::from_string_to_pos("c5"));
+                }
+            }
+            "d" => d::display(currentparsedfen.board, &currentfen),
             _ => {
                 println!("Unknown command '{}'. Use help or ? for more information.", command);
             }
