@@ -13,7 +13,7 @@
 #[derive(Clone)]
 #[derive(Debug)]
 pub struct Piece {
-    pub info: u8, // in the format XXXXCTTT where the T is color (0=black,1=white) and T is piece type
+    pub info: u8, // in the format XXXXCTTT where the C is color (0=black,1=white) and T is piece type
     pub position: u8, // in the form XfRRRFFF where X we don't care, F is the file (0-7 a-h) and R is the rank (0-7 1-8) and f is 'null' flag
     pub text: char,
 }

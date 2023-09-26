@@ -9,7 +9,7 @@ pub struct ParsedFEN {
     pub castling_rights: u8, // under the form XXXXWWBB where X we don't care, W is white castle (0=queen,1=king,2=both), B is black castle (0=queen,1=king,2=both)
     pub en_passant: u8, // under the form XfFFFRRR where X we don't care, F is the file (0-7 a-h), R is the rank (0-7 1-8), and f is a flag to check if it's none
     pub halfmove: u8,
-    pub fullmove: usize,
+    pub fullmove: u16,
 }
 
 pub fn parse_fen(fen: &str) -> ParsedFEN {
@@ -27,7 +27,7 @@ pub fn parse_fen(fen: &str) -> ParsedFEN {
     let mut _color: bool = false;
     let mut _passant: u8 = 64;
     let mut _half: u8 = 0;
-    let mut _full: usize = 0;
+    let mut _full: u16 = 0;
     let mut temp: String;
 
     let mut currentrank: u8 = 0;
@@ -109,10 +109,10 @@ pub fn parse_fen(fen: &str) -> ParsedFEN {
                 }
             }
             5 => {
-                match char.parse::<usize>() {
+                match char.parse::<u16>() {
                     Ok(value) => _full  = _full * 10 + value,
                     Err(err) => {
-                        eprintln!("ERR PARSING STRING TO U8: {}", err);
+                        eprintln!("ERR PARSING STRING TO U16: {}", err);
                         std::process::exit(1);
                     }
                 }
