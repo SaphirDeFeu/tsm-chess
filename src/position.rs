@@ -90,6 +90,7 @@ pub fn parse_fen(fen: &str) -> ParsedFEN {
                     "K" => _castle += 4,
                     "k" => _castle += 1,
                     "Q" | "q" => continue,
+                    "-" => continue,
                     _ => eprintln!("couldn't recognize castle rights part of fen string"),
                 }
             }

@@ -1,16 +1,19 @@
 mod piece;
 mod position;
 mod d;
+mod uci;
 
 fn main() {
     print!("TSMChess developed by TSMStudios | loaded modules (");
     piece::init();
     position::init();
     d::init();
+    uci::init();
     println!(")");
     let mut s_cmd: String = String::new();
     let mut currentfen: String = String::from(position::STARTING_FEN);
     let mut currentparsedfen: position::ParsedFEN = position::parse_fen(&currentfen);
+    let mut ready: &str = "";
     loop {
         std::io::stdin()
             .read_line(&mut s_cmd)
@@ -46,6 +49,15 @@ fn main() {
                 }
             }
             "d" => d::display(currentparsedfen.board, &currentfen),
+            "uci" => {
+                uci::start();
+            }
+            "ucinewgame" => {
+                ready = uci::newgame();
+            }
+            "isready" => {
+                println!("{}", ready);
+            }
             _ => {
                 println!("Unknown command '{}'. Use help or ? for more information.", command);
             }
